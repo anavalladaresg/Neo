@@ -1,50 +1,83 @@
-import { invoke } from "@tauri-apps/api/core";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
-import App from "./App";
+import { App } from "./App";
+import { productRoutes } from "./app/routes";
+import { Button } from "./components/ui/Button";
+import { Card } from "./components/ui/Card";
+import { PageHeader } from "./components/ui/PageHeader";
 
-vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(),
-}));
-
-const mockedInvoke = vi.mocked(invoke);
-
-describe("generated Tauri scaffold", () => {
+describe("Neo desktop shell", () => {
   beforeEach(() => {
-    mockedInvoke.mockReset();
+    window.location.hash = "";
   });
 
-  it("renders the framework links and greeting form", () => {
+  it("renders the desktop shell and every navigation destination", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "Welcome to Tauri + React" })).toBeVisible();
-    expect(screen.getByRole("link", { name: "Vite logo" })).toHaveAttribute(
-      "href",
-      "https://vite.dev",
-    );
-    expect(screen.getByRole("link", { name: "Tauri logo" })).toHaveAttribute(
-      "href",
-      "https://tauri.app",
-    );
-    expect(screen.getByRole("link", { name: "React logo" })).toHaveAttribute(
-      "href",
-      "https://react.dev",
-    );
-    expect(screen.getByPlaceholderText("Enter a name...")).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Greet" })).toBeEnabled();
+    expect(screen.getByRole("heading", { name: "Buenos días" })).toBeVisible();
+    const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    expect(navigation).toBeVisible();
+    expect(within(navigation).getAllByRole("link")).toHaveLength(productRoutes.length);
+    expect(screen.getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("submits the entered name through the Tauri command boundary", async () => {
+  it("navigates to every Spanish product page", async () => {
     const user = userEvent.setup();
-    mockedInvoke.mockResolvedValue("Hello, Neo! You've been greeted from Rust!");
     render(<App />);
 
-    await user.type(screen.getByPlaceholderText("Enter a name..."), "Neo");
-    await user.click(screen.getByRole("button", { name: "Greet" }));
+    for (const route of productRoutes.slice(1)) {
+      await user.click(screen.getByRole("link", { name: route.title }));
 
-    expect(mockedInvoke).toHaveBeenCalledWith("greet", { name: "Neo" });
-    expect(await screen.findByText("Hello, Neo! You've been greeted from Rust!")).toBeVisible();
+      expect(screen.getByRole("heading", { name: route.title, level: 1 })).toBeVisible();
+      expect(screen.getByRole("link", { name: route.title })).toHaveAttribute(
+        "aria-current",
+        "page",
+      );
+    }
+  });
+
+  it("moves focus through primary navigation with desktop arrow keys", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    const homeLink = screen.getByRole("link", { name: "Inicio" });
+    const feedingLink = screen.getByRole("link", { name: "Alimentación" });
+    const healthLink = screen.getByRole("link", { name: "Salud" });
+    const settingsLink = screen.getByRole("link", { name: "Ajustes" });
+
+    fireEvent.keyDown(navigation, { key: "ArrowDown" });
+    homeLink.focus();
+    await user.keyboard("{ArrowDown}");
+    expect(feedingLink).toHaveFocus();
+    await user.keyboard("{ArrowRight}");
+    expect(healthLink).toHaveFocus();
+    await user.keyboard("{ArrowUp}");
+    expect(feedingLink).toHaveFocus();
+    await user.keyboard("{ArrowLeft}");
+    expect(homeLink).toHaveFocus();
+    await user.keyboard("{End}");
+    expect(settingsLink).toHaveFocus();
+    await user.keyboard("{Home}");
+    expect(homeLink).toHaveFocus();
+    await user.keyboard("x");
+    expect(homeLink).toHaveFocus();
+  });
+
+  it("renders optional shared primitive content without changing semantics", () => {
+    render(
+      <>
+        <PageHeader description="Descripción de prueba" title="Cabecera sencilla" />
+        <Card action={<Button className="custom-action">Acción</Button>} title="Tarjeta de prueba">
+          Contenido
+        </Card>
+      </>,
+    );
+
+    expect(screen.getByRole("heading", { name: "Cabecera sencilla", level: 1 })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Tarjeta de prueba", level: 2 })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Acción" })).toHaveClass("custom-action");
   });
 });
