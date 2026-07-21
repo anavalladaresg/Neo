@@ -84,6 +84,16 @@ To add a primary navigation page:
 
 Do not reduce the minimum window without adding layout and keyboard evidence at the new size.
 
+## Visual reference
+
+These screenshots record the Issue #4 implementation and are embedded in its pull request:
+
+- [Expanded desktop shell](screenshots/issue-4/desktop-shell.png)
+- [Compact minimum-size shell](screenshots/issue-4/desktop-shell-compact.png)
+- [Confirmation dialog](screenshots/issue-4/confirmation-dialog.png)
+
+They are implementation evidence, not final brand artwork. Update them only when a focused user-interface change materially changes the documented behavior.
+
 ## Accessibility
 
 Neo targets WCAG 2.2 AA where applicable.
