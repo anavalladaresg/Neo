@@ -30,24 +30,18 @@ Dependencies are added only in the issue that needs them. The initial scaffold i
 
 See the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for current platform details.
 
-The repository inspection on 2026-07-21 found Node.js and WebView2 available, but Rust and Visual Studio Build Tools were not installed on the development machine. The frontend production build was verified independently.
+The Windows environment was verified on 2026-07-21 with Node.js 22.14.0, npm 11.10.0, Rust and Cargo 1.97.1, Rustup 1.29.0, the stable MSVC toolchain, Visual Studio Build Tools, the Windows SDK, and WebView2. Both Tauri development launch and Windows installer builds completed successfully.
 
 ## Development
 
 ```text
 npm ci
+npx playwright install chromium
 npm run dev
 npm run tauri dev
 ```
 
-Current scaffold commands:
-
-```text
-npm run build
-npm run tauri info
-```
-
-Quality commands required by project policy will be introduced in [issue #3](https://github.com/anavalladaresg/Neo/issues/3):
+Quality and build commands:
 
 ```text
 npm run lint
@@ -61,6 +55,8 @@ cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -
 cargo test --manifest-path src-tauri/Cargo.toml --all-features
 npm run tauri build
 ```
+
+See [Testing](docs/testing.md) for coverage thresholds, test layers, CI status names, and local browser setup.
 
 ## Documentation
 

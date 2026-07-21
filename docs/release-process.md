@@ -26,6 +26,8 @@ Synchronize every release version across:
 
 Publish only from the verified commit on `main`. Create an annotated `v<version>` tag and a GitHub Release marked prerelease when appropriate. Attach Windows installer artifacts and checksums where practical. Release notes are English and link included issues and pull requests.
 
+The manually dispatched `Release candidate` workflow validates a requested Git ref and uploads MSI and NSIS artifacts with read-only repository permissions. It does not create a tag, GitHub Release, or published release asset; issue #11 owns those irreversible release actions.
+
 Do not move or replace a published tag. If an artifact is defective, document it and prepare a new patch/prerelease version.
 
 ## Verification
