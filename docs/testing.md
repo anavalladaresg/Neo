@@ -32,13 +32,13 @@ npm run tauri build
 
 Install dependencies with `npm ci`. Install the pinned Playwright browser runtime once per environment with `npx playwright install chromium`; Linux CI uses `npx playwright install --with-deps chromium`. Rust commands and Tauri builds require the stable Rust MSVC toolchain and Visual Studio Build Tools described in the README.
 
-Vitest discovers component tests only under `src/`. Playwright owns tests under `e2e/`, starts the Vite server on `127.0.0.1:1420`, and retains traces, screenshots, and video only when they help diagnose failures. This separation prevents a test file from running under the wrong test runner.
+Vitest discovers component tests only under `src/`. Playwright owns tests under `e2e/`, starts the Vite server on `127.0.0.1:1420`, and retains traces, screenshots, and video only when they help diagnose failures. Workspace Playwright tests install an explicit browser adapter before navigation; production continues to use the Tauri command adapter. Browser tests must never automate or bypass real operating-system folder dialogs.
 
 ## Coverage
 
 Initial thresholds are at least 90% for lines, statements, and functions, and at least 85% for branches. Workspace validation and migration modules require 100%. Thresholds must not be lowered to make CI pass, and generated/vendor code must not be counted as authored coverage.
 
-The baseline component suite covers the generated scaffold's observable rendering and typed Tauri command boundary. It reports 100% statements, branches, functions, and lines without excluding authored behavioural code. New features must expand the suite rather than relying on the small baseline denominator.
+The workspace suite covers manifest and name validation, typed Tauri result parsing, error mapping, state transitions, Spanish onboarding interactions, focus, settings, and accessibility. The manifest and workspace-name validation modules require and maintain 100% coverage. New features must expand the suite rather than relying on the existing denominator.
 
 ## Fixtures and filesystem safety
 
@@ -48,7 +48,7 @@ Use fictional data and uniquely created temporary directories. Never use a home 
 
 Automated checks cover primary screens, but manual keyboard, focus, zoom/resize, contrast, and screen-reader smoke testing remain part of release verification. WCAG 2.2 AA is the target where applicable.
 
-The shell component suite uses axe-core for automatically detectable violations. JSDOM color-contrast checks are disabled because the environment cannot calculate rendered colors; rendered contrast remains a manual verification responsibility. Playwright covers primary navigation, arrow/Home/End keys, active-route semantics, confirmation-dialog Escape behavior, focus restoration, and horizontal overflow at `1180 × 780` and `760 × 600`.
+The component suite uses axe-core for automatically detectable violations on onboarding, recoverable errors, the active shell, and workspace settings. JSDOM color-contrast checks are disabled because the environment cannot calculate rendered colors; rendered contrast remains a manual verification responsibility. Playwright covers workspace creation/opening through the controlled adapter, primary navigation, arrow/Home/End keys, active-route semantics, confirmation-dialog Escape behavior, focus restoration, and horizontal overflow at `1180 × 780` and `760 × 600`.
 
 ## Pull request evidence
 

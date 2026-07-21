@@ -11,6 +11,8 @@ The React interface needs workspace data, but exposing generic filesystem APIs o
 
 Rust implements a narrow workspace service exposed through documented, typed Tauri commands. Commands accept logical operations and constrained workspace-relative identifiers rather than arbitrary absolute paths. Rust canonicalizes and authorizes every target. TypeScript wraps commands behind persistence interfaces; React components depend on application services, not Tauri APIs.
 
+For initial workspace creation, a native folder selection is stored in Rust and represented to the frontend by a one-use UUID token. Creation accepts only that token and a validated workspace name. Opening uses a native dialog inside Rust. Recent selections accept a workspace UUID and resolve its path from validated application-local settings. The frontend never passes an absolute path to a privileged command.
+
 ## Alternatives considered
 
 ### Direct frontend filesystem plugin access
@@ -31,3 +33,4 @@ Rust validation alone would duplicate or separate form/domain rules used by Reac
 - Native filesystem behaviour receives focused Rust tests.
 - UI components remain portable and easier to test.
 - Command types and error codes must be versioned carefully, and data is validated on both sides where trust boundaries require it.
+- Native dialog access remains inside Rust, while the webview capability stays at `core:default` with no generic filesystem permission.

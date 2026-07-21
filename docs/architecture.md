@@ -49,6 +49,8 @@ The shell supports a recommended `1180 × 780` window and a minimum `760 × 600`
 
 Tauri capabilities stay restrictive. Generic arbitrary-path read/write commands are prohibited.
 
+Issue #5 implements this boundary with five workspace commands. Native folder selections become one-use opaque authorization tokens; create commands accept only that token plus a validated name. Recent workspaces are reopened by UUID after Rust revalidates the installation-local path. The main webview receives only `core:default`, so JavaScript has no generic filesystem or dialog capability.
+
 ## Offline guarantee
 
 The shipped application does not require network permissions or networking dependencies for product behaviour. Any proposed network access requires a dedicated architecture issue, threat analysis, ADR, visible user value, and explicit approval. Build tools may download dependencies during development; that is not product runtime behaviour.
@@ -57,11 +59,12 @@ The shipped application does not require network permissions or networking depen
 
 1. A user selects or creates a workspace with a native dialog.
 2. Rust canonicalizes the root and validates `workspace.json`.
-3. The frontend requests a known logical document such as `profile`; it does not provide an arbitrary file path.
-4. Rust reads the corresponding path inside the authorized root.
-5. TypeScript parses the JSON with the matching Zod schema before state changes.
-6. Writes serialize a validated document, write and flush a temporary sibling file, then atomically replace the target where the platform permits.
-7. A future migration first creates a backup and only then replaces migrated documents.
+3. Rust returns a validated workspace summary, and TypeScript validates the boundary again with Zod before updating state.
+4. The frontend requests a known logical document such as `profile`; it does not provide an arbitrary file path.
+5. Rust reads the corresponding path inside the authorized root.
+6. TypeScript parses the JSON with the matching Zod schema before state changes.
+7. Writes serialize a validated document, write and flush a temporary sibling file, then atomically replace the target where the platform permits.
+8. A future migration first creates a backup and only then replaces migrated documents.
 
 ## Error model
 

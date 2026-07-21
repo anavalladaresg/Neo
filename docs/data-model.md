@@ -10,19 +10,19 @@ All documents are parsed with Zod before entering application state. Parsers sho
 
 ## Workspace metadata
 
-The initial `workspace.json` shape is planned as:
+The version 1 `workspace.json` shape is:
 
 ```json
 {
   "schemaVersion": 1,
-  "workspaceId": "550e8400-e29b-41d4-a716-446655440000",
+  "workspaceId": "01900000-0000-7000-8000-000000000000",
   "name": "Neo",
   "createdAt": "2026-07-21T12:00:00.000Z",
   "updatedAt": "2026-07-21T12:00:00.000Z"
 }
 ```
 
-The exact schema is implemented and frozen through its domain issue and tests. Examples here are design inputs, not permission to bypass validation.
+This schema is implemented and frozen. `workspaceId` is a UUID, timestamps are UTC, the name follows the documented Windows-safe workspace-name policy, and unknown fields are preserved when safe. The portable manifest contains no absolute path. Schema version 1 has no migration because it is the first released format.
 
 ## Dog profile
 
