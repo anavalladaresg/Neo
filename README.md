@@ -4,6 +4,8 @@ Neo is a local-first desktop application for managing the life, health, training
 
 Neo works offline. It has no backend, remote database, mandatory account, cloud dependency, telemetry, analytics, advertising, or hidden network requests. User data will live in a directory selected by the user and remain readable as versioned JSON plus separate media files.
 
+The application now includes its Spanish desktop shell and placeholder navigation for every primary product area. Domain data and workspace behavior remain intentionally unimplemented until their focused milestone issues.
+
 > [!IMPORTANT]
 > Neo is pre-alpha software. The generated scaffold is present, but the local profile workflow is not implemented yet. Track the first vertical slice in [milestone v0.1.0-alpha.1](https://github.com/anavalladaresg/Neo/milestone/1).
 
@@ -65,6 +67,7 @@ See [Testing](docs/testing.md) for coverage thresholds, test layers, CI status n
 - [Data model](docs/data-model.md)
 - [Local workspace](docs/local-workspace.md)
 - [Testing](docs/testing.md)
+- [Design system and desktop shell](docs/design-system.md)
 - [GitHub workflow](docs/github-workflow.md)
 - [Release process](docs/release-process.md)
 - [Repository settings](docs/github-settings.md)
