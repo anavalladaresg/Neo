@@ -9,12 +9,13 @@ export type WorkspaceStatus = "active" | "booting" | "onboarding";
 
 export interface WorkspaceState {
   activeWorkspace: WorkspaceSummary | null;
+  cancelCreation: () => void;
   clearError: () => void;
   createWorkspace: (workspaceName: string) => Promise<boolean>;
   error: WorkspaceErrorCode | null;
   initialize: () => Promise<void>;
   initialized: boolean;
-  notice: string | null;
+  notice: "created" | "opened" | null;
   openExistingWorkspace: () => Promise<boolean>;
   openRecentWorkspace: (workspaceId: string) => Promise<boolean>;
   operation: WorkspaceOperation;
@@ -49,6 +50,7 @@ function withActiveWorkspace(
 export function createWorkspaceStore(service: WorkspaceService) {
   return createStore<WorkspaceState>((set, get) => ({
     activeWorkspace: null,
+    cancelCreation: () => set({ error: null, pendingSelection: null }),
     clearError: () => set({ error: null }),
     createWorkspace: async (workspaceName) => {
       const selection = get().pendingSelection;
@@ -57,7 +59,7 @@ export function createWorkspaceStore(service: WorkspaceService) {
         return false;
       }
 
-      set({ error: null, operation: "creating" });
+      set({ error: null, notice: null, operation: "creating" });
       try {
         const workspace = await service.createWorkspace(selection.token, workspaceName);
         set({
@@ -98,7 +100,7 @@ export function createWorkspaceStore(service: WorkspaceService) {
     initialized: false,
     notice: null,
     openExistingWorkspace: async () => {
-      set({ error: null, operation: "opening" });
+      set({ error: null, notice: null, operation: "opening" });
       try {
         const workspace = await service.openExistingWorkspace();
         if (!workspace) {
@@ -117,7 +119,7 @@ export function createWorkspaceStore(service: WorkspaceService) {
       }
     },
     openRecentWorkspace: async (workspaceId) => {
-      set({ error: null, operation: "opening" });
+      set({ error: null, notice: null, operation: "opening" });
       try {
         const workspace = await service.openRecentWorkspace(workspaceId);
         set({

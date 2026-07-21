@@ -8,16 +8,21 @@ import { productRoutes } from "./app/routes";
 import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
 import { PageHeader } from "./components/ui/PageHeader";
+import { createWorkspaceServiceMock } from "./test/workspace-test-service";
+
+function renderActiveApp() {
+  return render(<App workspaceService={createWorkspaceServiceMock()} />);
+}
 
 describe("Neo desktop shell", () => {
   beforeEach(() => {
     window.location.hash = "";
   });
 
-  it("renders the desktop shell and every navigation destination", () => {
-    render(<App />);
+  it("renders the desktop shell and every navigation destination", async () => {
+    renderActiveApp();
 
-    expect(screen.getByRole("heading", { name: "Buenos días" })).toBeVisible();
+    expect(await screen.findByRole("heading", { name: "Buenos días" })).toBeVisible();
     const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
     expect(navigation).toBeVisible();
     expect(within(navigation).getAllByRole("link")).toHaveLength(productRoutes.length);
@@ -26,7 +31,8 @@ describe("Neo desktop shell", () => {
 
   it("navigates to every Spanish product page", async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderActiveApp();
+    await screen.findByRole("heading", { name: "Buenos días" });
 
     for (const route of productRoutes.slice(1)) {
       await user.click(screen.getByRole("link", { name: route.title }));
@@ -41,9 +47,9 @@ describe("Neo desktop shell", () => {
 
   it("moves focus through primary navigation with desktop arrow keys", async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderActiveApp();
 
-    const navigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    const navigation = await screen.findByRole("navigation", { name: "Navegación principal" });
     const homeLink = screen.getByRole("link", { name: "Inicio" });
     const feedingLink = screen.getByRole("link", { name: "Alimentación" });
     const healthLink = screen.getByRole("link", { name: "Salud" });
@@ -70,9 +76,9 @@ describe("Neo desktop shell", () => {
   it("moves focus to the main landmark without changing the current route", async () => {
     const user = userEvent.setup();
     window.location.hash = "#/salud";
-    render(<App />);
+    renderActiveApp();
 
-    await user.click(screen.getByRole("link", { name: "Saltar al contenido" }));
+    await user.click(await screen.findByRole("link", { name: "Saltar al contenido" }));
 
     expect(window.location.hash).toBe("#/salud");
     expect(document.getElementById("main-content")).toHaveFocus();
@@ -97,10 +103,10 @@ describe("Neo desktop shell", () => {
   it("renders the internal Spanish component showcase outside primary navigation", async () => {
     const user = userEvent.setup();
     window.location.hash = "#/componentes";
-    render(<App />);
+    renderActiveApp();
 
     expect(
-      screen.getByRole("heading", { name: "Componentes compartidos", level: 1 }),
+      await screen.findByRole("heading", { name: "Componentes compartidos", level: 1 }),
     ).toBeVisible();
     expect(screen.getByRole("navigation", { name: "Navegación principal" })).not.toHaveTextContent(
       "Componentes compartidos",
@@ -114,7 +120,8 @@ describe("Neo desktop shell", () => {
   });
 
   it("has no automatically detectable accessibility violations on the primary shell", async () => {
-    const { container } = render(<App />);
+    const { container } = renderActiveApp();
+    await screen.findByRole("heading", { name: "Buenos días" });
 
     const results = await axe.run(container, {
       rules: {
