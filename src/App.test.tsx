@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-core";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { App } from "./App";
@@ -79,5 +80,36 @@ describe("Neo desktop shell", () => {
     expect(screen.getByRole("heading", { name: "Cabecera sencilla", level: 1 })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Tarjeta de prueba", level: 2 })).toBeVisible();
     expect(screen.getByRole("button", { name: "Acción" })).toHaveClass("custom-action");
+  });
+
+  it("renders the internal Spanish component showcase outside primary navigation", async () => {
+    const user = userEvent.setup();
+    window.location.hash = "#/componentes";
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", { name: "Componentes compartidos", level: 1 }),
+    ).toBeVisible();
+    expect(screen.getByRole("navigation", { name: "Navegación principal" })).not.toHaveTextContent(
+      "Componentes compartidos",
+    );
+
+    const trigger = screen.getByRole("button", { name: "Abrir confirmación" });
+    await user.click(trigger);
+    expect(screen.getByRole("button", { name: "Quitar ejemplo" })).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Quitar ejemplo" }));
+    expect(trigger).toHaveFocus();
+  });
+
+  it("has no automatically detectable accessibility violations on the primary shell", async () => {
+    const { container } = render(<App />);
+
+    const results = await axe.run(container, {
+      rules: {
+        "color-contrast": { enabled: false },
+      },
+    });
+
+    expect(results.violations).toEqual([]);
   });
 });
