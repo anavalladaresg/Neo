@@ -127,6 +127,11 @@
   border-radius: 50%;
 }
 
+.confirmation-dialog--primary .confirmation-dialog__icon {
+  color: var(--neo-color-primary-strong);
+  background: var(--neo-color-primary-soft);
+}
+
 .confirmation-dialog__close {
   display: grid;
   width: 2.25rem;

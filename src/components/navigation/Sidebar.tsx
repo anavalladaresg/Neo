@@ -3,11 +3,13 @@ import type { KeyboardEvent } from "react";
 import { PawPrint } from "lucide-react";
 
 import { productRoutes } from "../../app/routes";
+import { useWorkspace } from "../../features/workspace/state/useWorkspace";
 import { NavigationItem } from "./NavigationItem";
 
 const navigationKeys = new Set(["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"]);
 
 export function Sidebar() {
+  const workspaceName = useWorkspace((state) => state.activeWorkspace?.manifest.name);
   function handleNavigationKeyDown(event: KeyboardEvent<HTMLElement>) {
     if (!navigationKeys.has(event.key)) {
       return;
@@ -65,7 +67,7 @@ export function Sidebar() {
           <PawPrint size={18} strokeWidth={1.7} />
         </span>
         <span className="sidebar__footer-copy">
-          <strong>Privado y local</strong>
+          <strong>{workspaceName ?? "Privado y local"}</strong>
           <small>Sin cuentas ni conexión</small>
         </span>
       </div>

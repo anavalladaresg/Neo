@@ -4,6 +4,7 @@ import { AppShell } from "../components/layout/AppShell";
 import { ComponentShowcasePage } from "../pages/ComponentShowcasePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { PlaceholderPage } from "../pages/PlaceholderPage";
+import { WorkspaceSettingsPage } from "../pages/WorkspaceSettingsPage";
 import { productRoutes } from "./routes";
 
 export function AppRoutes() {
@@ -15,7 +16,13 @@ export function AppRoutes() {
           <Route
             key={route.path}
             path={route.path.slice(1)}
-            element={<PlaceholderPage route={route} />}
+            element={
+              route.path === "/ajustes" ? (
+                <WorkspaceSettingsPage />
+              ) : (
+                <PlaceholderPage route={route} />
+              )
+            }
           />
         ))}
         <Route path="componentes" element={<ComponentShowcasePage />} />

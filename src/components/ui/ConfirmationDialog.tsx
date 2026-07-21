@@ -7,6 +7,7 @@ import { Button } from "./Button";
 interface ConfirmationDialogProps {
   cancelLabel?: string;
   confirmLabel?: string;
+  confirmTone?: "danger" | "primary";
   description: string;
   onCancel: () => void;
   onConfirm: () => void;
@@ -17,6 +18,7 @@ interface ConfirmationDialogProps {
 export function ConfirmationDialog({
   cancelLabel = "Cancelar",
   confirmLabel = "Confirmar",
+  confirmTone = "danger",
   description,
   onCancel,
   onConfirm,
@@ -55,7 +57,7 @@ export function ConfirmationDialog({
     <dialog
       aria-describedby="confirmation-dialog-description"
       aria-labelledby="confirmation-dialog-title"
-      className="confirmation-dialog"
+      className={`confirmation-dialog confirmation-dialog--${confirmTone}`}
       onCancel={(event) => {
         event.preventDefault();
         onCancel();
@@ -81,7 +83,7 @@ export function ConfirmationDialog({
         <Button onClick={onCancel} tone="quiet">
           {cancelLabel}
         </Button>
-        <Button onClick={onConfirm} ref={confirmButtonRef} tone="danger">
+        <Button onClick={onConfirm} ref={confirmButtonRef} tone={confirmTone}>
           {confirmLabel}
         </Button>
       </div>

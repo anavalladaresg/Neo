@@ -11,6 +11,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Initial Tauri 2, React, and TypeScript scaffold.
 - Repository governance, contribution guidance, security policy, documentation baseline, issue forms, pull request template, and dependency update policy.
 - Spanish desktop shell with responsive primary navigation, semantic design tokens, shared interface states, accessible confirmation dialogs, and placeholder pages for every initial product area.
+- Local workspace creation and opening with a versioned manifest, transactional directory setup, remembered recent workspaces, safe Spanish recovery messages, and workspace information in Ajustes.
 
 ### Changed
 
@@ -30,7 +31,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Security
 
-- Documented the offline architecture and workspace filesystem security boundary.
+- Implemented and documented an opaque-token Tauri workspace boundary without broad frontend filesystem permissions.
 
 ## [0.1.0-alpha.1] - Unreleased
 

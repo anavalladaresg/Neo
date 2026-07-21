@@ -1,9 +1,11 @@
 import { HardDrive, ShieldCheck } from "lucide-react";
-import type { MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 import { Outlet } from "react-router-dom";
 
 import { Badge } from "../ui/Badge";
 import { Sidebar } from "../navigation/Sidebar";
+import { useWorkspace } from "../../features/workspace/state/useWorkspace";
+import { workspaceCopy } from "../../features/workspace/workspace-copy";
 import "../../styles/shell.css";
 
 function focusMainContent(event: MouseEvent<HTMLAnchorElement>) {
@@ -12,6 +14,16 @@ function focusMainContent(event: MouseEvent<HTMLAnchorElement>) {
 }
 
 export function AppShell() {
+  const activeWorkspace = useWorkspace((state) => state.activeWorkspace);
+  const notice = useWorkspace((state) => state.notice);
+  const noticeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (notice) {
+      noticeRef.current?.focus();
+    }
+  }, [notice]);
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content" onClick={focusMainContent}>
@@ -26,9 +38,16 @@ export function AppShell() {
             <ShieldCheck aria-hidden="true" size={17} strokeWidth={1.8} />
             <span>Tu espacio personal</span>
           </div>
-          <Badge icon={HardDrive} tone="neutral">
-            Solo en este dispositivo
-          </Badge>
+          <div className="app-topbar__workspace">
+            {notice ? (
+              <div className="workspace-notice" ref={noticeRef} role="status" tabIndex={-1}>
+                {workspaceCopy.success[notice]}
+              </div>
+            ) : null}
+            <Badge icon={HardDrive} tone="neutral">
+              {activeWorkspace?.manifest.name ?? "Espacio local"}
+            </Badge>
+          </div>
         </header>
 
         <main className="app-content" id="main-content" tabIndex={-1}>

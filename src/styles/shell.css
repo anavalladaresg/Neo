@@ -189,6 +189,19 @@
   font-weight: 650;
 }
 
+.app-topbar__workspace {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: var(--neo-space-3);
+}
+
+.workspace-notice {
+  color: var(--neo-color-success);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
 .app-content {
   min-width: 0;
   padding: clamp(1.5rem, 3.5vw, 3.5rem);

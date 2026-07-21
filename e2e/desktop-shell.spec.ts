@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { installWorkspaceServiceMock } from "./workspace-service-mock";
+
 const navigationDestinations = [
   "Inicio",
   "Alimentación",
@@ -11,6 +13,10 @@ const navigationDestinations = [
   "Notas",
   "Ajustes",
 ] as const;
+
+test.beforeEach(async ({ page }) => {
+  await installWorkspaceServiceMock(page, "active");
+});
 
 test("loads the Neo desktop shell and navigates across every product area", async ({ page }) => {
   await page.goto("/");
@@ -47,6 +53,7 @@ test("supports arrow-key navigation in the permanent sidebar", async ({ page }) 
 
 test("moves focus to the main landmark without changing the current route", async ({ page }) => {
   await page.goto("/#/salud");
+  await expect(page.getByRole("heading", { name: "Salud", level: 1 })).toBeVisible();
 
   await page.keyboard.press("Tab");
   const skipLink = page.getByRole("link", { name: "Saltar al contenido" });
