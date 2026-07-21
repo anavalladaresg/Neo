@@ -26,7 +26,7 @@ The default branch is `main`. Repository settings should:
 - Force pushes and deletion of `main`: disabled
 - GitHub Issues, milestone, and required custom labels: created
 - GitHub Actions workflows: CI and manual release-candidate workflows are defined by [issue #3](https://github.com/anavalladaresg/Neo/issues/3) with read-only repository permissions
-- Required status checks: pending their first successful report before branch protection is updated
+- Required status checks: all nine Issue #3 CI contexts are required with strict branch updates
 
 The initial remote and local scaffold histories were unrelated. They were reconciled without force push by replaying the existing scaffold commit on top of the remote initialization commit and fast-forwarding `main` before branch protection was enabled.
 
@@ -34,14 +34,14 @@ The initial remote and local scaffold histories were unrelated. They were reconc
 
 Repository governance was introduced by issue #2. CI and its stable status-check names are introduced separately by issue #3. Protection can require CI only after those checks exist and have reported at least once. Until then, the repository has a documented bootstrap gap: maintainers must not merge without manually verified local checks and review even if GitHub cannot enforce the absent checks.
 
-The exact contexts are `Formatting`, `ESLint`, `TypeScript`, `Frontend unit tests`, `Frontend coverage`, `Frontend build`, `End-to-end tests`, `Rust quality`, and `Windows Tauri build`. Configure all nine as required with strict branch updates after the Issue #3 pull request reports them successfully. Record any plan or permission failure here and create a labeled GitHub issue for the required manual action.
+The exact contexts are `Formatting`, `ESLint`, `TypeScript`, `Frontend unit tests`, `Frontend coverage`, `Frontend build`, `End-to-end tests`, `Rust quality`, and `Windows Tauri build`. All nine reported successfully on the Issue #3 pull request and were configured as required checks with strict branch updates on 2026-07-21. The branch protection API also verified one required approval, stale-review dismissal, last-push approval, conversation resolution, linear history, administrator enforcement, and disabled force pushes and branch deletion.
 
 ## Settings audit checklist
 
 - [x] Pull requests required
 - [x] One approval required
-- [ ] Required status checks configured
-- [ ] Branch required to be up to date
+- [x] Required status checks configured
+- [x] Branch required to be up to date
 - [x] Conversation resolution required
 - [x] Linear history required
 - [x] Administrators included
