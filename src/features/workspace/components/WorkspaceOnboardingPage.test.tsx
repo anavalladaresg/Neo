@@ -20,6 +20,15 @@ const familyWorkspace: WorkspaceSummary = {
   rootPath: "D:\\Familia\\Neo",
 };
 
+const holidayWorkspace: WorkspaceSummary = {
+  manifest: {
+    ...neoWorkspaceFixture.manifest,
+    workspaceId: "01900000-0000-7000-8000-000000000002",
+    name: "Vacaciones",
+  },
+  rootPath: "D:\\Vacaciones\\Neo",
+};
+
 function createFirstRunService(overrides: Partial<WorkspaceService> = {}) {
   return createWorkspaceServiceMock({
     loadSession: vi.fn().mockResolvedValue({ activeWorkspace: null, recentWorkspaces: [] }),
@@ -157,20 +166,23 @@ describe("workspace onboarding", () => {
 
   it("opens a revalidated recent workspace with keyboard-only interaction", async () => {
     const user = userEvent.setup();
+    const openRecentWorkspace = vi.fn().mockResolvedValue(familyWorkspace);
     const service = createFirstRunService({
       loadSession: vi.fn().mockResolvedValue({
         activeWorkspace: null,
-        recentWorkspaces: [familyWorkspace],
+        recentWorkspaces: [familyWorkspace, holidayWorkspace],
       }),
-      openRecentWorkspace: vi.fn().mockResolvedValue(familyWorkspace),
+      openRecentWorkspace,
     });
     render(<App workspaceService={service} />);
 
-    const openRecent = await screen.findByRole("button", { name: "Abrir" });
+    const openRecent = await screen.findByRole("button", { name: "Abrir Familia" });
+    expect(screen.getByRole("button", { name: "Abrir Vacaciones" })).toBeEnabled();
     openRecent.focus();
     await user.keyboard("{Enter}");
     expect(await screen.findByRole("heading", { name: "Buenos días" })).toBeVisible();
     expect(screen.getAllByText("Familia").length).toBeGreaterThan(0);
+    expect(openRecentWorkspace).toHaveBeenCalledWith(familyWorkspace.manifest.workspaceId);
   });
 
   it("shows workspace details in settings and confirms before switching", async () => {

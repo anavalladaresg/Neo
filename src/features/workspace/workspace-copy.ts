@@ -33,6 +33,7 @@ export const workspaceCopy = {
     recentTitle: "Espacios recientes",
     recentDescription: "Solo aparecen carpetas que Neo ha vuelto a validar.",
     openRecentAction: "Abrir",
+    openRecentAccessibleName: (workspaceName: string) => `Abrir ${workspaceName}`,
   },
   settings: {
     title: "Ajustes",

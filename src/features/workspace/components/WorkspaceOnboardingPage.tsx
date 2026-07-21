@@ -200,6 +200,9 @@ export function WorkspaceOnboardingPage() {
                     <span>{formatPrivateWorkspacePath(workspace.rootPath)}</span>
                   </div>
                   <Button
+                    aria-label={workspaceCopy.onboarding.openRecentAccessibleName(
+                      workspace.manifest.name,
+                    )}
                     disabled={isPending}
                     onClick={() => void openRecentWorkspace(workspace.manifest.workspaceId)}
                     tone="quiet"
