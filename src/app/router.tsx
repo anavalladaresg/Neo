@@ -1,6 +1,7 @@
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { AppShell } from "../components/layout/AppShell";
+import { ComponentShowcasePage } from "../pages/ComponentShowcasePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { PlaceholderPage } from "../pages/PlaceholderPage";
 import { productRoutes } from "./routes";
@@ -17,6 +18,7 @@ export function AppRoutes() {
             element={<PlaceholderPage route={route} />}
           />
         ))}
+        <Route path="componentes" element={<ComponentShowcasePage />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Route>
     </Routes>

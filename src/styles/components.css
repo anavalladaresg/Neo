@@ -1,0 +1,191 @@
+.feedback-state {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  padding: var(--neo-space-8) var(--neo-space-5);
+  text-align: center;
+  background: var(--neo-color-surface);
+  border: 1px dashed var(--neo-color-border);
+  border-radius: var(--neo-radius-lg);
+}
+
+.feedback-state__icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  color: var(--neo-color-primary-strong);
+  background: var(--neo-color-primary-soft);
+  border-radius: 50%;
+}
+
+.feedback-state--error .feedback-state__icon {
+  color: var(--neo-color-danger);
+  background: var(--neo-color-danger-soft);
+}
+
+.feedback-state__icon--loading svg {
+  animation: neo-spin 1.1s linear infinite;
+}
+
+.feedback-state h2 {
+  margin: var(--neo-space-4) 0 var(--neo-space-2);
+  font-family: var(--neo-font-display);
+  font-size: 1.25rem;
+  font-weight: 550;
+}
+
+.feedback-state p {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--neo-color-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.feedback-state__action {
+  margin-top: var(--neo-space-5);
+}
+
+.text-field {
+  display: grid;
+  gap: var(--neo-space-2);
+}
+
+.text-field label {
+  color: var(--neo-color-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.text-field__input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  color: var(--neo-color-text);
+  background: var(--neo-color-surface);
+  border: 1px solid var(--neo-color-border);
+  border-radius: var(--neo-radius-md);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.text-field__input:hover {
+  border-color: var(--neo-color-primary);
+}
+
+.text-field__input--error {
+  border-color: var(--neo-color-danger);
+}
+
+.text-field__message {
+  margin: 0;
+  color: var(--neo-color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.text-field__message--error {
+  color: var(--neo-color-danger);
+}
+
+.confirmation-dialog {
+  width: min(calc(100vw - 2rem), 30rem);
+  padding: var(--neo-space-6);
+  color: var(--neo-color-text);
+  background: var(--neo-color-surface);
+  border: 1px solid var(--neo-color-border);
+  border-radius: var(--neo-radius-xl);
+  box-shadow: var(--neo-shadow-dialog);
+}
+
+.confirmation-dialog::backdrop {
+  background: var(--neo-color-overlay);
+  backdrop-filter: blur(3px);
+}
+
+.confirmation-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--neo-space-4);
+}
+
+.confirmation-dialog__icon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  color: var(--neo-color-danger);
+  background: var(--neo-color-danger-soft);
+  border-radius: 50%;
+}
+
+.confirmation-dialog__close {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  place-items: center;
+  color: var(--neo-color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.confirmation-dialog__close:hover {
+  color: var(--neo-color-text);
+  background: var(--neo-color-surface-muted);
+}
+
+.confirmation-dialog h2 {
+  margin: var(--neo-space-5) 0 var(--neo-space-2);
+  font-family: var(--neo-font-display);
+  font-size: 1.55rem;
+  font-weight: 550;
+}
+
+.confirmation-dialog p {
+  margin: 0;
+  color: var(--neo-color-text-muted);
+  line-height: 1.65;
+}
+
+.confirmation-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--neo-space-3);
+  margin-top: var(--neo-space-6);
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--neo-space-5);
+}
+
+.showcase-stack {
+  display: grid;
+  gap: var(--neo-space-5);
+}
+
+@keyframes neo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 62rem) {
+  .showcase-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 46rem) {
+  .confirmation-dialog__actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+}
