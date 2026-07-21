@@ -27,10 +27,11 @@ Install the Windows prerequisites described in [README.md](README.md), then run:
 
 ```text
 npm ci
+npx playwright install chromium
 npm run dev
 ```
 
-Run the complete relevant validation matrix from [AGENTS.md](AGENTS.md) before requesting review. Do not claim a check passed unless its exit status was verified.
+Run the complete relevant validation matrix from [AGENTS.md](AGENTS.md) before requesting review. The frontend commands are available as explicit npm scripts; run Rust commands from `src-tauri` or pass its manifest path. Do not claim a check passed unless its exit status was verified.
 
 ## Changes and commits
 
