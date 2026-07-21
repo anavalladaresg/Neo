@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Initial Tauri 2, React, and TypeScript scaffold.
 - Repository governance, contribution guidance, security policy, documentation baseline, issue forms, pull request template, and dependency update policy.
+- Spanish desktop shell with responsive primary navigation, semantic design tokens, shared interface states, accessible confirmation dialogs, and placeholder pages for every initial product area.
 
 ### Changed
 

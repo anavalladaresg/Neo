@@ -32,6 +32,12 @@ The dependency direction points inward: React depends on application interfaces,
 
 React components must not read or write filesystem paths directly.
 
+### Presentation shell
+
+The React entry point composes a centralized hash router inside the permanent desktop shell. `app/routes.ts` owns the typed primary navigation metadata. Shared layout, navigation, feedback, and UI primitives live under `components/`; route content lives under `pages/`. Semantic CSS tokens and responsive rules remain under `styles/` and do not depend on product state.
+
+The shell supports a recommended `1180 × 780` window and a minimum `760 × 600` window. Its sidebar becomes icon-compact at `860` CSS pixels while retaining accessible names and keyboard navigation. See [Design system and desktop shell](design-system.md).
+
 ### Rust and Tauri
 
 - Open native workspace and asset selection dialogs.
@@ -84,5 +90,7 @@ Do not create empty architectural folders before an issue needs them.
 
 - [ADR 0001: Use a versioned local JSON workspace](adr/0001-versioned-local-json-workspace.md)
 - [ADR 0002: Keep privileged filesystem access behind typed Tauri commands](adr/0002-typed-tauri-storage-boundary.md)
+- [ADR 0003: Use centralized hash routing for desktop navigation](adr/0003-centralized-hash-routing.md)
+- [ADR 0004: Build the interface from semantic tokens and native primitives](adr/0004-semantic-token-design-system.md)
 
 New significant decisions require an ADR with status, context, decision, alternatives, and consequences.

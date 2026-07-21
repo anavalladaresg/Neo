@@ -48,6 +48,8 @@ Use fictional data and uniquely created temporary directories. Never use a home 
 
 Automated checks cover primary screens, but manual keyboard, focus, zoom/resize, contrast, and screen-reader smoke testing remain part of release verification. WCAG 2.2 AA is the target where applicable.
 
+The shell component suite uses axe-core for automatically detectable violations. JSDOM color-contrast checks are disabled because the environment cannot calculate rendered colors; rendered contrast remains a manual verification responsibility. Playwright covers primary navigation, arrow/Home/End keys, active-route semantics, confirmation-dialog Escape behavior, focus restoration, and horizontal overflow at `1180 × 780` and `760 × 600`.
+
 ## Pull request evidence
 
 Record commands, exit results, coverage, relevant platform/toolchain gaps, and manual checks in the PR. Upload screenshots for visible changes and failure artifacts for end-to-end tests when useful. Never report a command as passing if it was skipped, timed out, or unavailable.
