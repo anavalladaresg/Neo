@@ -1,14 +1,20 @@
 import { HardDrive, ShieldCheck } from "lucide-react";
+import type { MouseEvent } from "react";
 import { Outlet } from "react-router-dom";
 
 import { Badge } from "../ui/Badge";
 import { Sidebar } from "../navigation/Sidebar";
 import "../../styles/shell.css";
 
+function focusMainContent(event: MouseEvent<HTMLAnchorElement>) {
+  event.preventDefault();
+  document.getElementById("main-content")?.focus();
+}
+
 export function AppShell() {
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">
+      <a className="skip-link" href="#main-content" onClick={focusMainContent}>
         Saltar al contenido
       </a>
 

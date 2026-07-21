@@ -67,6 +67,18 @@ describe("Neo desktop shell", () => {
     expect(homeLink).toHaveFocus();
   });
 
+  it("moves focus to the main landmark without changing the current route", async () => {
+    const user = userEvent.setup();
+    window.location.hash = "#/salud";
+    render(<App />);
+
+    await user.click(screen.getByRole("link", { name: "Saltar al contenido" }));
+
+    expect(window.location.hash).toBe("#/salud");
+    expect(document.getElementById("main-content")).toHaveFocus();
+    expect(screen.getByRole("heading", { name: "Salud", level: 1 })).toBeVisible();
+  });
+
   it("renders optional shared primitive content without changing semantics", () => {
     render(
       <>
