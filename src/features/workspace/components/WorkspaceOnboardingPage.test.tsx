@@ -66,7 +66,7 @@ describe("workspace onboarding", () => {
     await user.type(nameField, "  Mi   Neo  ");
     await user.tab();
     expect(nameField).toHaveValue("Mi Neo");
-    expect(screen.getByText((content) => content.endsWith("Example\\\\Mi Neo"))).toBeVisible();
+    expect(screen.getByText((content) => content.endsWith("Example\\Mi Neo"))).toBeVisible();
 
     await user.click(screen.getByRole("button", { name: "Crear espacio" }));
     expect(screen.getByRole("dialog", { name: "¿Crear este espacio de trabajo?" })).toBeVisible();

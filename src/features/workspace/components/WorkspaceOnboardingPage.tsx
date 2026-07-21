@@ -133,7 +133,8 @@ export function WorkspaceOnboardingPage() {
             <div className="workspace-folder-preview">
               <span>{workspaceCopy.onboarding.resultingFolder}</span>
               <strong>
-                {formatPrivateWorkspacePath(pendingSelection.displayPath)}\\
+                {formatPrivateWorkspacePath(pendingSelection.displayPath)}
+                {"\\"}
                 {normalizedName || "…"}
               </strong>
             </div>
