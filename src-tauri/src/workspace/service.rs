@@ -39,6 +39,10 @@ pub fn create_workspace(parent: &Path, name: &str) -> WorkspaceResult<WorkspaceS
     create_workspace_with_failure(parent, name, false)
 }
 
+pub(super) fn canonicalize_workspace_parent(parent: &Path) -> WorkspaceResult<PathBuf> {
+    canonicalize_directory(parent, WorkspaceErrorCode::InvalidPath)
+}
+
 pub fn inspect_workspace(root: &Path) -> WorkspaceResult<WorkspaceSummary> {
     let canonical_root = canonicalize_directory(root, WorkspaceErrorCode::NotWorkspace)?;
     let manifest_path = canonical_root.join("workspace.json");
@@ -64,7 +68,7 @@ fn create_workspace_with_failure(
     name: &str,
     simulate_failure_after_manifest: bool,
 ) -> WorkspaceResult<WorkspaceSummary> {
-    let canonical_parent = canonicalize_directory(parent, WorkspaceErrorCode::InvalidPath)?;
+    let canonical_parent = canonicalize_workspace_parent(parent)?;
     let normalized_name = super::name::validate_workspace_name(name)?;
     reject_case_insensitive_conflict(&canonical_parent, &normalized_name)?;
 
@@ -287,7 +291,8 @@ mod tests {
 
     #[cfg(windows)]
     #[test]
-    fn rejects_symlink_workspace_roots_when_windows_allows_fixture_creation() {
+    fn rejects_symlink_workspace_parents_before_canonicalization_when_windows_allows_fixture_creation(
+    ) {
         use std::os::windows::fs::symlink_dir;
 
         let parent = tempdir().unwrap();
@@ -297,9 +302,10 @@ mod tests {
 
         if symlink_dir(&target, &link).is_ok() {
             assert_eq!(
-                create_workspace(&link, "Neo").unwrap_err().code,
+                canonicalize_workspace_parent(&link).unwrap_err().code,
                 WorkspaceErrorCode::InvalidPath
             );
+            assert!(!target.join("Neo").exists());
         }
     }
 }

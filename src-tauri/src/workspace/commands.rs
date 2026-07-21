@@ -7,13 +7,34 @@ use uuid::Uuid;
 
 use super::{
     error::{WorkspaceCommandError, WorkspaceErrorCode, WorkspaceResult},
-    service::{create_workspace, inspect_workspace, WorkspaceSession, WorkspaceSummary},
+    service::{
+        canonicalize_workspace_parent, create_workspace, inspect_workspace, WorkspaceSession,
+        WorkspaceSummary,
+    },
     settings::{remember_workspace, valid_workspace_session, SETTINGS_FILE_NAME},
 };
 
 #[derive(Default)]
 pub struct WorkspaceAuthorizationState {
     selected_directories: Mutex<HashMap<Uuid, PathBuf>>,
+}
+
+impl WorkspaceAuthorizationState {
+    fn store_selection(&self, token: Uuid, path: PathBuf) -> WorkspaceResult<()> {
+        self.selected_directories
+            .lock()
+            .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::Unexpected))?
+            .insert(token, path);
+        Ok(())
+    }
+
+    fn take_selection(&self, token: Uuid) -> WorkspaceResult<PathBuf> {
+        self.selected_directories
+            .lock()
+            .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::Unexpected))?
+            .remove(&token)
+            .ok_or_else(|| WorkspaceCommandError::new(WorkspaceErrorCode::SelectionExpired))
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -52,14 +73,9 @@ pub async fn select_workspace_parent(
     let Some(path) = pick_directory(&app, "Elige dónde guardar tu espacio de Neo")? else {
         return Ok(None);
     };
-    let canonical_path = std::fs::canonicalize(&path)
-        .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::InvalidPath))?;
+    let canonical_path = canonicalize_workspace_parent(&path)?;
     let token = Uuid::new_v4();
-    state
-        .selected_directories
-        .lock()
-        .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::Unexpected))?
-        .insert(token, canonical_path.clone());
+    state.store_selection(token, canonical_path.clone())?;
 
     Ok(Some(DirectorySelection {
         display_path: canonical_path.to_string_lossy().into_owned(),
@@ -77,15 +93,24 @@ pub async fn create_local_workspace(
 ) -> WorkspaceResult<WorkspaceSummary> {
     let token = Uuid::parse_str(&selection_token)
         .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::SelectionExpired))?;
-    let parent = state
-        .selected_directories
-        .lock()
-        .map_err(|_| WorkspaceCommandError::new(WorkspaceErrorCode::Unexpected))?
-        .remove(&token)
-        .ok_or_else(|| WorkspaceCommandError::new(WorkspaceErrorCode::SelectionExpired))?;
-    let workspace = create_workspace(&parent, &workspace_name)?;
+    let workspace = create_workspace_for_selection(state.inner(), token, &workspace_name)?;
     remember_workspace(&settings_path(&app)?, &workspace)?;
     Ok(workspace)
+}
+
+fn create_workspace_for_selection(
+    state: &WorkspaceAuthorizationState,
+    token: Uuid,
+    workspace_name: &str,
+) -> WorkspaceResult<WorkspaceSummary> {
+    let parent = state.take_selection(token)?;
+    match create_workspace(&parent, workspace_name) {
+        Ok(workspace) => Ok(workspace),
+        Err(error) => {
+            state.store_selection(token, parent)?;
+            Err(error)
+        }
+    }
 }
 
 /// Opens and validates a workspace selected through the native directory picker.
@@ -122,4 +147,42 @@ pub async fn open_recent_workspace(
         .ok_or_else(|| WorkspaceCommandError::new(WorkspaceErrorCode::NotWorkspace))?;
     remember_workspace(&settings_path, &workspace)?;
     Ok(workspace)
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use tempfile::tempdir;
+
+    use super::*;
+
+    #[test]
+    fn restores_a_selection_token_after_a_recoverable_creation_failure() {
+        let parent = tempdir().unwrap();
+        let conflict = parent.path().join("Neo");
+        fs::create_dir(&conflict).unwrap();
+        let state = WorkspaceAuthorizationState::default();
+        let token = Uuid::new_v4();
+        state
+            .store_selection(token, parent.path().to_path_buf())
+            .unwrap();
+
+        assert_eq!(
+            create_workspace_for_selection(&state, token, "Neo")
+                .unwrap_err()
+                .code,
+            WorkspaceErrorCode::DestinationConflict
+        );
+
+        fs::remove_dir(&conflict).unwrap();
+        let workspace = create_workspace_for_selection(&state, token, "Neo").unwrap();
+        assert_eq!(workspace.manifest.name, "Neo");
+        assert_eq!(
+            create_workspace_for_selection(&state, token, "Other")
+                .unwrap_err()
+                .code,
+            WorkspaceErrorCode::SelectionExpired
+        );
+    }
 }
