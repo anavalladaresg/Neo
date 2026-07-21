@@ -36,7 +36,7 @@
     "@types/node": "22.20.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react": "^6.0.3",
     "@vitest/coverage-v8": "4.1.10",
     "axe-core": "4.12.1",
     "eslint": "10.7.0",
