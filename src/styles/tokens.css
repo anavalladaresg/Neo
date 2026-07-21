@@ -1,0 +1,75 @@
+@theme {
+  --color-background: var(--neo-color-background);
+  --color-surface: var(--neo-color-surface);
+  --color-surface-muted: var(--neo-color-surface-muted);
+  --color-border: var(--neo-color-border);
+  --color-text: var(--neo-color-text);
+  --color-text-muted: var(--neo-color-text-muted);
+  --color-primary: var(--neo-color-primary);
+  --color-primary-strong: var(--neo-color-primary-strong);
+  --color-primary-soft: var(--neo-color-primary-soft);
+  --color-accent: var(--neo-color-accent);
+  --color-accent-soft: var(--neo-color-accent-soft);
+  --color-danger: var(--neo-color-danger);
+  --color-danger-soft: var(--neo-color-danger-soft);
+  --color-warning: var(--neo-color-warning);
+  --color-warning-soft: var(--neo-color-warning-soft);
+  --color-success: var(--neo-color-success);
+  --color-success-soft: var(--neo-color-success-soft);
+
+  --font-sans: var(--neo-font-sans);
+  --font-display: var(--neo-font-display);
+
+  --radius-sm: var(--neo-radius-sm);
+  --radius-md: var(--neo-radius-md);
+  --radius-lg: var(--neo-radius-lg);
+  --radius-xl: var(--neo-radius-xl);
+}
+
+:root {
+  --neo-color-background: #f5f1e9;
+  --neo-color-surface: #fffdf8;
+  --neo-color-surface-muted: #ebe5da;
+  --neo-color-border: #ded6c9;
+  --neo-color-text: #292720;
+  --neo-color-text-muted: #6c665d;
+  --neo-color-primary: #728369;
+  --neo-color-primary-strong: #53634d;
+  --neo-color-primary-soft: #dfe7da;
+  --neo-color-accent: #b96f4c;
+  --neo-color-accent-soft: #f3ded2;
+  --neo-color-danger: #a94742;
+  --neo-color-danger-soft: #f7dedc;
+  --neo-color-warning: #a87531;
+  --neo-color-warning-soft: #f5e7cb;
+  --neo-color-success: #587454;
+  --neo-color-success-soft: #dde9da;
+  --neo-color-focus: #41533d;
+  --neo-color-overlay: rgb(41 39 32 / 42%);
+
+  --neo-font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --neo-font-display: Georgia, "Times New Roman", serif;
+
+  --neo-space-1: 0.25rem;
+  --neo-space-2: 0.5rem;
+  --neo-space-3: 0.75rem;
+  --neo-space-4: 1rem;
+  --neo-space-5: 1.25rem;
+  --neo-space-6: 1.5rem;
+  --neo-space-8: 2rem;
+  --neo-space-10: 2.5rem;
+  --neo-space-12: 3rem;
+
+  --neo-radius-sm: 0.5rem;
+  --neo-radius-md: 0.75rem;
+  --neo-radius-lg: 1rem;
+  --neo-radius-xl: 1.375rem;
+  --neo-shadow-sm: 0 1px 2px rgb(41 39 32 / 5%);
+  --neo-shadow-md: 0 12px 30px rgb(64 54 42 / 8%);
+  --neo-shadow-dialog: 0 24px 70px rgb(41 39 32 / 24%);
+
+  --neo-sidebar-width: 17rem;
+  --neo-sidebar-compact-width: 5.5rem;
+  --neo-content-max-width: 92rem;
+  --neo-focus-ring: 0 0 0 3px rgb(114 131 105 / 30%);
+}
