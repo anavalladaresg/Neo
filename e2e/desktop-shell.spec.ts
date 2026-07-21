@@ -45,6 +45,19 @@ test("supports arrow-key navigation in the permanent sidebar", async ({ page }) 
   await expect(homeLink).toBeFocused();
 });
 
+test("moves focus to the main landmark without changing the current route", async ({ page }) => {
+  await page.goto("/#/salud");
+
+  await page.keyboard.press("Tab");
+  const skipLink = page.getByRole("link", { name: "Saltar al contenido" });
+  await expect(skipLink).toBeFocused();
+  await skipLink.press("Enter");
+
+  await expect(page).toHaveURL(/#\/salud$/);
+  await expect(page.locator("#main-content")).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Salud", level: 1 })).toBeVisible();
+});
+
 for (const viewport of [
   { width: 1180, height: 780, name: "recommended" },
   { width: 760, height: 600, name: "minimum" },
