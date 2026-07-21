@@ -10,7 +10,26 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage
+playwright-report
+test-results
 *.local
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Neo user workspaces and release output
+NeoWorkspace/
+neo-workspace/
+src-tauri/target/
+release-artifacts/
+*.msi
+*.msix
+*.appx
+*.exe
+*.dmg
 
 # Editor directories and files
 .vscode/*
