@@ -75,6 +75,16 @@ test("closes the confirmation dialog with Escape and restores focus", async ({ p
   const dialog = page.getByRole("dialog", { name: "¿Quieres quitar este ejemplo?" });
   await expect(dialog).toBeVisible();
   await expect(page.getByRole("button", { name: "Quitar ejemplo" })).toBeFocused();
+  const dialogBox = await dialog.boundingBox();
+  const viewport = page.viewportSize();
+  expect(dialogBox).not.toBeNull();
+  expect(viewport).not.toBeNull();
+  expect(
+    Math.abs((dialogBox?.x ?? 0) + (dialogBox?.width ?? 0) / 2 - (viewport?.width ?? 0) / 2),
+  ).toBeLessThan(4);
+  expect(
+    Math.abs((dialogBox?.y ?? 0) + (dialogBox?.height ?? 0) / 2 - (viewport?.height ?? 0) / 2),
+  ).toBeLessThan(4);
 
   await page.keyboard.press("Escape");
 
